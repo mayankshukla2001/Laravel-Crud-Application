@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Middleware\adminAuth;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,7 +62,7 @@ Route::post('/authenticate',[FormController::class, 'loginUser']);
 Route::get('logout', [FormController::class, 'logout'])->name('logout');
 
     
-// Route::middleware(['userAuth'])->group(function () {
+Route::middleware(['adminAuth'])->group(function () {
     Route::get('/add-student', [StudentController::class, 'create'])->name('student.create');
     Route::post('/add-student', [StudentController::class, 'store'])->name('student.store');
     Route::get('/edit-student/{id}', [StudentController::class, 'edit'])->name('student.edit');
@@ -76,9 +77,9 @@ Route::get('logout', [FormController::class, 'logout'])->name('logout');
     Route::put('/update-employee/{id}', [EmployeeController::class, 'update'])->name('employee.update');
     Route::get('/delete-employee/{id}', [EmployeeController::class, 'destroy'])->name('employee.destroy');
     Route::get('/user/employee', [EmployeeController::class, 'showDetail'])->name('employee.showDetail');
-// });
-// Route::middleware(['guest'])->group(function () {
-//     Route::get('/user/login', function () {
-//         return view('login');
-//     })->name('login');
-// });
+});
+
+    Route::get('/user/login', function () {
+        return view('login');
+    })->name('login');
+

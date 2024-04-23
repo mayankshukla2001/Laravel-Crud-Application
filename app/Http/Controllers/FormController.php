@@ -13,6 +13,7 @@ class FormController extends Controller
 {
     public function store(Request $request): RedirectResponse
     {
+        
         $request->validate
         ([
                 'name' => 'required',
@@ -34,9 +35,9 @@ class FormController extends Controller
 
             $res=$user->save();
 
-            if($res)
+            if(\Auth::attempt($request->only('email','password')))
             {
-                return redirect('user/login')->with('success', 'User created successfully.');
+                return redirect('add-student')->with('success', 'User created successfully.');
             }
             else{
                 return back()->with('fail', 'Something went wrong.');
@@ -49,14 +50,14 @@ class FormController extends Controller
         $request->validate(
             [
                 'password' => 'required|min:5',
-                'email' => 'required|email|unique:users'
+                'email' => 'required|email'
             ],
             [
                 'password.required' => 'Password field is required.',
                 'password.min' => 'Password length should be at least 5.',
                 'email.required' => 'Email field is required.',
                 'email.email' => 'Email field must be email address.',
-                'email.unique' => 'This email address is already taken.',
+                // 'email.unique' => 'This email address is already taken.',
         ]
         );
 
